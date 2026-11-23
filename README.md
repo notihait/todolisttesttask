@@ -1,24 +1,69 @@
-# README
+# 📝 To-Do List
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Простое веб-приложение «Список задач» на Ruby on Rails 8. Тестовое задание.
 
-Things you may want to cover:
+**Демо:** _ссылка появится после деплоя_
 
-* Ruby version
+## Возможности
 
-* System dependencies
+- ➕ создание новых задач
+- ✅ отметка выполненных задач (и снятие отметки)
+- 🗑 удаление задач
+- 💾 сохранение списка в базе данных: задачи не пропадают после перезагрузки страницы
+- валидация: пустые задачи и названия длиннее 200 символов не принимаются
+- счётчик выполненных задач; невыполненные идут сверху, выполненные уходят вниз
 
-* Configuration
+## Стек
 
-* Database creation
+| Компонент | Технология |
+|---|---|
+| Язык | Ruby 3.3 |
+| Фреймворк | Ruby on Rails 8.0 |
+| База данных | SQLite |
+| Фронтенд | ERB, Turbo, чистый CSS (без JavaScript-фреймворков) |
 
-* Database initialization
+## Запуск локально
 
-* How to run the test suite
+Нужны Ruby 3.3+ и Bundler.
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+git clone https://github.com/ВАШ_НИК/todo_list.git
+cd todo_list
+bundle install
+bin/rails db:setup
+bin/rails server
+```
 
-* Deployment instructions
+Откройте http://localhost:3000
 
-* ...
+## Структура проекта
+
+```
+app/
+├── controllers/tasks_controller.rb   # index, create, update (toggle), destroy
+├── models/task.rb                    # валидации и сортировка
+├── views/tasks/index.html.erb        # страница со списком и формой
+└── assets/stylesheets/application.css
+config/routes.rb                      # root "tasks#index", resources :tasks
+db/migrate/                           # миграция таблицы tasks
+```
+
+## Модель данных
+
+`tasks`
+
+| Поле | Тип | Описание |
+|---|---|---|
+| `title` | string, not null | текст задачи (до 200 символов) |
+| `completed` | boolean, default `false` | статус выполнения |
+| `created_at`, `updated_at` | datetime | служебные поля |
+
+## Использованные AI-инструменты
+
+- **Claude (Anthropic)**: проектирование структуры приложения, генерация кода (модель, контроллер, представление, стили), пошаговая отладка ошибок (совместимость версий gem `json`, вёрстка формы), подготовка документации.
+
+Весь код запущен и проверен вручную: создание, отметка, удаление и сохранение после перезагрузки.
+
+## Заметки
+
+- В `Gemfile` версия `json` ограничена веткой 2.x (`gem "json", "~> 2.9"`): с `json 3.x` Rails 8.0 падает при записи сессии в cookie.
